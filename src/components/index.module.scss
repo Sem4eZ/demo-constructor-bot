@@ -1,0 +1,71 @@
+
+
+
+.phoneInputContainer {
+  display: flex;
+  flex-direction: column;
+
+  width: 300px;
+
+  gap: 16px;
+
+  input {
+
+    cursor: pointer;
+    padding: 10px 20px;
+
+    border-radius: 10px;
+
+    background-color: #f5f5f5;
+
+    border: 1px solid gray;
+
+    &:active , &:focus, &:checked, &:focus-visible {
+      border: 1px solid green;
+    }
+  }
+
+  button {
+    cursor: pointer;
+    padding: 10px 20px;
+
+    border-radius: 10px;
+
+    background-color: #6dff82;
+
+    border: 1px solid gray;
+
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #49ff62;
+    }
+  }
+
+  div {
+    color: red;
+    font-weight: 600;
+  }
+
+}
+
+
+  .resendButton {
+    cursor: pointer;
+
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px 20px;
+
+    border-radius: 10px;
+
+    background-color: #ffed85;
+
+    border: 1px solid gray;
+
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #ffe553;
+    }
+  }
