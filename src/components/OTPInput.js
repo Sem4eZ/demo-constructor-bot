@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import style from './index.module.scss'
 
-const OTPInput = ({ onSubmit, onResend, onExpire }) => {
+const OTPInput = ({ onSubmit, onResend, onExpire, isFail }) => {
     const [timeLeft, setTimeLeft] = useState(60);
 
     useEffect(() => {
@@ -24,7 +24,6 @@ const OTPInput = ({ onSubmit, onResend, onExpire }) => {
         initialValues: { password: "" },
         validationSchema: Yup.object({
             password: Yup.string()
-                // .matches(/^\d{6}$/, "Введите корректный одноразовый пароль")
                 .required("Обязательное поле"),
         }),
         onSubmit: (values) => {
@@ -45,18 +44,22 @@ const OTPInput = ({ onSubmit, onResend, onExpire }) => {
                         onBlur={formik.handleBlur}
                     />
                     {formik.touched.password && formik.errors.password ? (
-                        <div>{formik.errors.password}</div>
+                        <div className={style.error}>{formik.errors.password}</div>
                     ) : null}
                     <button type="submit">Подтвердить</button>
                 </div>
             </form>
             {timeLeft > 0 ? (
-                <div>Время жизни пароля: {timeLeft} секунд</div>
+                <div>Запросить пароль можно будет через: {timeLeft} секунд</div>
             ) : (
                 <div>
-                    <button onClick={onResend} className={style.resendButton}>Запросить код повторно</button>
+                    <button onClick={() => {
+                        setTimeLeft(60)
+                        onResend()
+                    }} className={style.resendButton}>Запросить код повторно</button>
                 </div>
             )}
+            {isFail && <p className={style.error}>Введен неверный код подтверждения</p> }
         </div>
     );
 };

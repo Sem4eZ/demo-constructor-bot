@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PhoneInput from "../components/PhoneInput";
 import OTPInput from "../components/OTPInput";
 import SuccessMessage from "../components/SuccessMessage";
-import { sendPhoneNumber, verifyOTP } from "../services/api";
+import { fetchResultData, sendPhoneNumber} from "../services/api";
 
 const VerificationPage = () => {
     const [step, setStep] = useState(1);
     const [phone, setPhone] = useState("");
+    const [fetchedData, setFetchedData] = useState(null);
+    const [isFail, setIsFail] = useState(false);
+    const [verificationNode, setVerificationNode] = useState(null);
 
     const handlePhoneSubmit = async (phone) => {
         try {
@@ -19,13 +22,33 @@ const VerificationPage = () => {
     };
 
     const handleOTPSubmit = async (otp) => {
-        try {
-            await verifyOTP(phone, otp);
-            setStep(3);
-        } catch (error) {
-            console.error("Неверный одноразовый пароль:", error);
-        }
+        const fetchData = async () => {
+            try {
+                const data = await fetchResultData(phone, otp);
+                setFetchedData(data);
+            } catch (error) {
+                console.error("Ошибка при получении данных:", error);
+            }
+        };
+
+        fetchData();
     };
+
+    useEffect(() => {
+        if (fetchedData) {
+            const node = Object.values(fetchedData).find(node => node?.node_name === 'verification_password');
+            setVerificationNode(node);
+        }
+    }, [fetchedData]);
+
+    useEffect(() => {
+        if (verificationNode && verificationNode.data.auth) {
+            setStep(3);
+        } else if (verificationNode) {
+            setStep(2);
+            setIsFail(true);
+        }
+    }, [verificationNode]);
 
     const handleResend = () => {
         handlePhoneSubmit(phone);
@@ -43,9 +66,10 @@ const VerificationPage = () => {
                     onSubmit={handleOTPSubmit}
                     onResend={handleResend}
                     onExpire={handleExpire}
+                    isFail={isFail}
                 />
             )}
-            {step === 3 && <SuccessMessage />}
+            {step === 3 && <SuccessMessage {...verificationNode} />}
         </div>
     );
 };
