@@ -9,6 +9,7 @@ const VerificationPage = () => {
     const [phone, setPhone] = useState("");
     const [fetchedData, setFetchedData] = useState(null);
     const [isFail, setIsFail] = useState(false);
+    const [isTimeRemain, setIsTimeRemain] = useState(false);
     const [verificationNode, setVerificationNode] = useState(null);
 
     const handlePhoneSubmit = async (phone) => {
@@ -42,7 +43,11 @@ const VerificationPage = () => {
     }, [fetchedData]);
 
     useEffect(() => {
-        if (verificationNode && verificationNode.data.auth) {
+        if (verificationNode && verificationNode.data.remaining_end_time === 0) {
+            setStep(2);
+            setIsFail(false);
+            setIsTimeRemain(true)
+        } else if (verificationNode && verificationNode.data.auth) {
             setStep(3);
         } else if (verificationNode) {
             setStep(2);
@@ -67,6 +72,7 @@ const VerificationPage = () => {
                     onResend={handleResend}
                     onExpire={handleExpire}
                     isFail={isFail}
+                    isTimeRemain={isTimeRemain}
                 />
             )}
             {step === 3 && <SuccessMessage {...verificationNode} />}

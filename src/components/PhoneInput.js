@@ -29,7 +29,7 @@ const PhoneInput = ({ onSubmit }) => {
                             onBlur={formik.handleBlur}
                         />
                         {formik.touched.chatt_id && formik.errors.chatt_id ? (
-                            <div>{formik.errors.chatt_id}</div>
+                            <div className={style.error}>{formik.errors.chatt_id}</div>
                         ) : null}
                         <button type="submit">Отправить</button>
                 </div>

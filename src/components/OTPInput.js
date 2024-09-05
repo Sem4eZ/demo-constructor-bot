@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import style from './index.module.scss'
 
-const OTPInput = ({ onSubmit, onResend, onExpire, isFail }) => {
+const OTPInput = ({ onSubmit, onResend, onExpire, isFail,isTimeRemain }) => {
     const [timeLeft, setTimeLeft] = useState(60);
 
     useEffect(() => {
@@ -32,7 +32,7 @@ const OTPInput = ({ onSubmit, onResend, onExpire, isFail }) => {
     });
 
     return (
-        <div >
+        <div className={style.container}>
             <form onSubmit={formik.handleSubmit}>
                 <div className={style.phoneInputContainer}>
                     <input
@@ -60,6 +60,7 @@ const OTPInput = ({ onSubmit, onResend, onExpire, isFail }) => {
                 </div>
             )}
             {isFail && <p className={style.error}>Введен неверный код подтверждения</p> }
+            {isTimeRemain && <p className={style.error}>Время жизни пароля истекло</p> }
         </div>
     );
 };
